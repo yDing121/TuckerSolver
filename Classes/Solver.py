@@ -30,22 +30,21 @@ class Solver:
             return
 
         print(f"Pivoting on 0-indexed position ({i},{j}):\t{p}")
-        newarr = self.arr.copy()
+        temp = self.arr.copy()
 
         # PQRS
         for r in range(self.n+1):
             if r == i:
                 for k in range(self.m+1):
-                    newarr[i, k] /= p
+                    self.arr[i, k] = temp[i,k]/p
                 continue
             for c in range(self.m+1):
                 if c == j:
                     for k in range(self.n+1):
-                        newarr[k, j] /= -p
+                        self.arr[k, j] = temp[k,j]/(-p)
                     continue
-                newarr[r, c] = (self.arr[r, c] * p - self.arr[i, c]*self.arr[r, j])/p
-        newarr[i, j] = 1 / p
-        self.arr = newarr
+                self.arr[r, c] = (temp[r, c] * p - temp[i, c]*temp[r, j])/p
+        self.arr[i, j] = 1 / p
 
 
 if __name__ == "__main__":
@@ -62,6 +61,6 @@ if __name__ == "__main__":
     # solver.pivot(0, 0)
     # print(solver)
     solver = Solver()
-    solver.create_from([[1,0,-2,10], [3,1,-1,15], [1,3,-3,0]])
+    solver.create_from([[1,2,-2,10], [3,1,-1,15], [1,3,-3,0]])
     solver.pivot(0,1)
     print(solver)
