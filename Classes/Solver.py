@@ -29,6 +29,13 @@ class Solver:
             print("Divide by zero, check input")
             return
 
+        if i == self.n:
+            print("Requesting pivot on c, skipping")
+            return
+        elif j == self.m:
+            print("Requesting pivot on b, skipping")
+            return
+
         print(f"Pivoting on 0-indexed position ({i},{j}):\t{p}")
         temp = self.arr.copy()
 
