@@ -30,6 +30,10 @@ class Solver:
         # self.n = len(arr[0]) - 1
         # return self
 
+    def create_from_sympy(self, symmatrix):
+        self.__init__(symmatrix.shape[0]-1, symmatrix.shape[1]-1)
+        self.arr = symmatrix.copy()
+
     def __str__(self) -> str:
         ret = ""
         for i in range(self.m+1):
@@ -40,6 +44,10 @@ class Solver:
         self.arr[i,j] = sy.Rational(k)
 
     def pivot(self, i, j):
+        if i is None or j is None or i < 0 or j < 0:
+            print("Missing or negative input, check")
+            return
+
         # TODO: modify pivot() and row/col deletion to account for the variables
         p = self.arr[i, j]
         if p == 0:
@@ -56,6 +64,7 @@ class Solver:
         print(f"Pivoting on 0-indexed position ({i},{j}):\t{p}")
         temp = self.arr.copy()
 
+
         # PQRS
         for r in range(self.m+1):
             if r == i:
@@ -69,6 +78,85 @@ class Solver:
                     continue
                 self.arr[r, c] = (temp[r, c] * p - temp[i, c]*temp[r, j])/p
         self.arr[i, j] = 1 / p
+        print("wtf")
+        return self.arr
+
+    def otherpivot(self, mat, i, j):
+        if i is None or j is None or i < 0 or j < 0:
+            print("Missing or negative input, check")
+            return
+
+        p = mat[i, j]
+        if p == 0:
+            print("Divide by zero, check input")
+            return
+
+        tm = mat.shape[0]-1
+        tn = mat.shape[1]-1
+
+        if i == tm:
+            print("Requesting pivot on c, skipping")
+            return
+        elif j == tn:
+            print("Requesting pivot on b, skipping")
+            return
+
+        print(f"Pivoting on 0-indexed position ({i},{j}):\t{p}")
+        temp = mat.copy()
+
+        # PQRS
+        for r in range(tm+1):
+            if r == i:
+                for k in range(tn+1):
+                    mat[i, k] = temp[i,k]/p
+                continue
+            for c in range(tn+1):
+                if c == j:
+                    for k in range(tm+1):
+                        mat[k, j] = temp[k,j]/(-p)
+                    continue
+                mat[r, c] = (temp[r, c] * p - temp[i, c]*temp[r, j])/p
+        mat[i, j] = 1 / p
+        print("wtf")
+        return self.arr
+
+    def pivot2(self, i, j):
+        if i is None or j is None or i < 0 or j < 0:
+            print("Missing or negative input, check")
+            return
+
+        p = self.arr[i, j]
+        if p == 0:
+            print("Divide by zero, check input")
+            return
+
+        if i == self.m:
+            print("Requesting pivot on c, skipping")
+            return
+        elif j == self.n:
+            print("Requesting pivot on b, skipping")
+            return
+
+        print(f"Pivoting on 0-indexed position ({i},{j}):\t{p}")
+        temp = self.arr.copy()
+        ansarr = self.arr.copy()
+
+        # PQRS
+        for r in range(self.m + 1):
+            if r == i:
+                for k in range(self.n + 1):
+                    ansarr[i, k] = temp[i, k] / p
+                continue
+            for c in range(self.n + 1):
+                if c == j:
+                    for k in range(self.m + 1):
+                        ansarr[k, j] = temp[k, j] / (-p)
+                    continue
+                ansarr[r, c] = (temp[r, c] * p - temp[i, c] * temp[r, j]) / p
+        ansarr[i, j] = 1 / p
+        print("wtf")
+        self.arr = ansarr
+        return ansarr
 
     def check_optimal(self):
         # Check if b column is valid
@@ -113,6 +201,7 @@ if __name__ == "__main__":
     # print(solver)
     solver = Solver()
     solver.create_from([[1,2,-2,10], [3,1,-1,15], [1,3,-3,0]])
+    print(solver)
     solver.pivot(0,1)
     print(solver)
     solver.delete_col(0)
