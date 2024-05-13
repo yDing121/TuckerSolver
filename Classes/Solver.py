@@ -174,18 +174,22 @@ class Solver:
         return True
 
     def delete_col(self, c):
-        if c < 0 or self.n <= c:
+        if c < 0 or self.n - 1 < c:
             print("Invalid request, ignoring")
             return
 
         self.arr.col_del(c)
+        self.n -= 1
+        print(self)
 
     def delete_row(self, r):
-        if r < 0 or self.m <= r:
+        if r < 0 or self.m - 1 < r:
             print("Invalid request, ignoring")
             return
 
         self.arr.row_del(r)
+        self.m -= 1
+        print(self)
 
 
 if __name__ == "__main__":

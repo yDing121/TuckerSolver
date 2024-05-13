@@ -44,11 +44,27 @@ class MatrixDisplay:
                     self.cell_size
                 )
 
-                # Highlight cell green
-                if col == highlight_col and row == highlight_row:
-                    pygame.draw.rect(self.screen, (119, 237, 140), rect)
+                # Colors for highlighting
+                bvec_color = (245, 203, 105)
+                cvec_color = (247, 119, 59)
+                d_color = (24, 235, 242)
+                hl_color = (119, 237, 140)
+                def_color = (200, 200, 200)
+
+                # Highlight d
+                if col == self.matrix.shape[1] - 1 and row == self.matrix.shape[0] - 1:
+                    pygame.draw.rect(self.screen, d_color, rect)
+                # Highlight b
+                elif col == self.matrix.shape[1] - 1:
+                    pygame.draw.rect(self.screen, bvec_color, rect)
+                # Highlight c
+                elif row == self.matrix.shape[0] - 1:
+                    pygame.draw.rect(self.screen, cvec_color, rect)
+                # Highlight cell
+                elif col == highlight_col and row == highlight_row:
+                    pygame.draw.rect(self.screen, hl_color, rect)
                 else:
-                    pygame.draw.rect(self.screen, (200, 200, 200), rect)
+                    pygame.draw.rect(self.screen, def_color, rect)
 
                 text_surface = self.font.render(value, True, self.text_color)
                 text_rect = text_surface.get_rect(center=rect.center)
@@ -129,6 +145,11 @@ class MatrixDisplay:
         pygame.quit()
         sys.exit()
 
+    def update_disp_matrix(self):
+        self.matrix = self.solver.arr.copy()
+        self.rows, self.cols = self.matrix.shape
+        self.draw_matrix()
+
     def handle_click(self, position, lastcell_row=None, lastcell_col=None):
         """ Handle cell click to toggle the value. """
         x, y = position
@@ -136,34 +157,29 @@ class MatrixDisplay:
         row = int((y - self.start_y) // (self.cell_size + self.margin))
         print(f"({row}, {col})")
 
+        # Functions
         if self.cols + 2 <= col <= self.cols + 3:
             if row == 0:
                 print("pivot")
-                del self.solver
-                self.solver = Solver.Solver()
-                self.solver.create_from_sympy(self.matrix)
                 self.solver.pivot(lastcell_row, lastcell_col)
-                self.matrix = self.solver.arr.copy()
-                self.draw_matrix()
-
-                # print(self.solver.pivot(lastcell_row, lastcell_col))
-                # self.matrix = self.solver.pivot2(lastcell_row, lastcell_col)
-                print(self.matrix)
+                self.update_disp_matrix()
             elif row == 1:
                 print("del row")
+                self.solver.delete_row(lastcell_row)
+                self.update_disp_matrix()
             elif row == 2:
                 print("del col")
+                self.solver.delete_col(lastcell_col)
+                self.update_disp_matrix()
             else:
                 print("what")
-            # self.matrix = self.solver.arr
+
+            print(self.matrix)
             self.draw_matrix()
             return None
 
         if 0 <= col < self.cols and 0 <= row < self.rows:
-            # # Check if the click is within bounds
-            # # Example operation: toggling between 0 and 1 for demonstration
-            # new_value = 1 if self.matrix[row, col] == 0 else 0
-            # self.matrix[row, col] = new_value
+            # Check if the click is within bounds
             self.draw_matrix(row, col)
             return tuple((row, col))
 
