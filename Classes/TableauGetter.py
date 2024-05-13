@@ -2,6 +2,7 @@ import pygame
 import pygame.freetype
 import sympy
 
+
 class InputBox:
     def __init__(self, x, y, width, height, initial_text='', text_color=(255, 255, 255)):
         self.rect = pygame.Rect(x, y, width, height)

@@ -54,7 +54,10 @@ class Solver:
             print("Divide by zero, check input")
             return
 
-        if i == self.m:
+        if i == self.m and j == self.n:
+            print("Requesting pivot on d, skipping")
+            return
+        elif i == self.m:
             print("Requesting pivot on c, skipping")
             return
         elif j == self.n:
@@ -63,7 +66,6 @@ class Solver:
 
         print(f"Pivoting on 0-indexed position ({i},{j}):\t{p}")
         temp = self.arr.copy()
-
 
         # PQRS
         for r in range(self.m+1):
