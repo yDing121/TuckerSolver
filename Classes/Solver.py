@@ -80,9 +80,10 @@ class Solver:
                     continue
                 self.arr[r, c] = (temp[r, c] * p - temp[i, c]*temp[r, j])/p
         self.arr[i, j] = 1 / p
-        print("wtf")
+        # print("wtf")
         return self.arr
 
+    # Deprecated
     def otherpivot(self, mat, i, j):
         if i is None or j is None or i < 0 or j < 0:
             print("Missing or negative input, check")
@@ -122,6 +123,7 @@ class Solver:
         print("wtf")
         return self.arr
 
+    # Deprecated
     def pivot2(self, i, j):
         if i is None or j is None or i < 0 or j < 0:
             print("Missing or negative input, check")
@@ -163,16 +165,17 @@ class Solver:
     def check_optimal(self):
         # Check if b column is valid
         for r in range(self.m):
-            if self.arr[r, self.n] < 0:
+            if self.arr[r, self.n] < 0 and r != self.m:
                 return False
 
         # Check if c row is valid
         for c in range(self.n):
-            if self.arr[self.m, c] > 0:
+            if self.arr[self.m, c] > 0 and c != self.n:
                 return False
 
         return True
 
+    # Delete column from tableau
     def delete_col(self, c):
         if c < 0 or self.n - 1 < c:
             print("Invalid request, ignoring")
@@ -182,6 +185,7 @@ class Solver:
         self.n -= 1
         print(self)
 
+    # Delete row from tableau
     def delete_row(self, r):
         if r < 0 or self.m - 1 < r:
             print("Invalid request, ignoring")
