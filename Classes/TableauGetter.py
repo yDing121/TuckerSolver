@@ -69,6 +69,7 @@ def assign_matrix(screen, rows, cols):
 def main():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption("Tableau Getter")
 
     # Set dimensions
     rows_box = InputBox(300, 150, 50, 40, '3')

@@ -25,7 +25,7 @@ class MatrixDisplay:
         width = self.start_x + self.cols * (cell_size + margin) + self.start_x + 4 * cell_size
         height = max(self.start_y + self.rows * (cell_size + margin) + self.start_y, 6 * cell_size)
         self.screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption("Matrix Display")
+        pygame.display.set_caption("Tucker Pivoter")
 
         # Update the entire display
         self.draw_matrix()
